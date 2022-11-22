@@ -104,6 +104,9 @@ func updateCustomer(w http.ResponseWriter, r *http.Request) {
 	}
 	if _, ok := customers[id]; ok {
 		w.WriteHeader(http.StatusOK)
+		if customer.ID == 0 {
+			customer.ID, err = strconv.Atoi(id)
+		}
 		customers[id] = customer
 		res, err := json.Marshal(customers)
 		if err != nil {
@@ -134,6 +137,15 @@ func deleteCustomer(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+func index(w http.ResponseWriter, r *http.Request) {
+	html, err := ioutil.ReadFile("./static/index.html")
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+	fmt.Fprintf(w, string(html))
+}
+
 func main() {
 
 	r := mux.NewRouter()
@@ -142,5 +154,6 @@ func main() {
 	r.HandleFunc("/customers/{id}", getCustomer).Methods("GET")
 	r.HandleFunc("/customers/{id}", updateCustomer).Methods("PATCH")
 	r.HandleFunc("/customers/{id}", deleteCustomer).Methods("DELETE")
+	r.HandleFunc("/", index).Methods("GET")
 	http.ListenAndServe(":3000", r)
 }

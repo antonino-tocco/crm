@@ -1,5 +1,9 @@
 # CRM API
 
+## INSTALL DEPENDENCIES
+The only dependency to install is: gorilla/mux. All other import are native go package.
+You can install it with this command: `go get github.com/gorilla/mux`
+
 ## API
 
 ### GET CUSTOMERS
